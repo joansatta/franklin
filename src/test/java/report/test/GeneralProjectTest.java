@@ -1,17 +1,22 @@
 package report.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
+import org.json.simple.JSONArray;
+import org.json.simple.parser.ParseException;
 import org.junit.Test;
 
+import report.controller.RestController;
+import report.utils.AccessJson;
 import report.utils.ReportProperties;
 
 public class GeneralProjectTest {
 
 	@Test
-	public void test() {
+	public void readPropertiesTest() {
 		try {
 			ReportProperties properties = new ReportProperties();
 			assertEquals(properties.getProperty("tokenName"),"Authorization");
@@ -20,5 +25,34 @@ public class GeneralProjectTest {
 			e.printStackTrace();
 		}
 	}
+	
+	@Test
+	public void getKpiIdTest() {
+		try {
+			ReportProperties properties = new ReportProperties();
+			JSONArray kpis = RestController.getKpis(properties);
+			String id = AccessJson.getStringFromValue(kpis, new String[]{"name"}, properties.getInput("kpiName"), "id");
+			assertEquals(id,"P-102");
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void getGroupIdTest() {
+		try {
+			ReportProperties properties = new ReportProperties();
+			JSONArray groups = RestController.getGroups(properties);
+			Long id = AccessJson.getLongFromValue(groups, new String[]{"name"}, properties.getInput("groupName"), "id");
+			assertTrue(id==3939);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	}
+	
 
 }

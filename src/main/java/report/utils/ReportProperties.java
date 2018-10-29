@@ -11,10 +11,12 @@ public class ReportProperties {
 	
 	Map<String,String> properties;
 	Map<String,String> urls;
+	Map<String,String> inputs;
 	
 	public ReportProperties() throws IOException {
 		properties = readFile("src\\main\\resources\\params.properties");
 		urls = readFile("src\\main\\resources\\urls.assets");
+		inputs = readFile("src\\main\\resources\\inputs.assets");
 	}
 	
 	public String getProperty(String name) {
@@ -23,6 +25,10 @@ public class ReportProperties {
 	
 	public String getUrl(String name) {
 		return urls.get("baseUrl")+urls.get("apiVersion")+urls.get(name);
+	}
+	
+	public String getInput(String name) {
+		return inputs.get(name);
 	}
 
 	public static Map<String,String> readFile(String relativePath) throws IOException 

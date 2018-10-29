@@ -21,4 +21,14 @@ public class RestController {
 		return RestService.getJsonArray(url, properties);
 	}
 
+	public static JSONArray getGroups(ReportProperties properties) throws MalformedURLException, IOException, ParseException {
+		String url = properties.getUrl("getGroups");
+		return RestService.getJsonArray(url, properties);
+	}
+	
+	public static JSONArray getResponseRates(ReportProperties properties,String groupId) throws MalformedURLException, IOException, ParseException {
+		String url = properties.getUrl("getResponseRates").replace("{groupId}",groupId);
+		return RestService.getJsonArray(url, properties);
+	}
+
 }

@@ -7,27 +7,21 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import report.utils.AccessJson;
 import report.utils.ReportProperties;
 
 
 public class RestService {
 
-	@SuppressWarnings("unchecked")
+
 	public static JSONArray getJsonArray(String urlString, ReportProperties properties) throws MalformedURLException, IOException, ParseException {
-		JSONArray ret = null;
-		try {
-			ret = (JSONArray)getValues(urlString, properties);
-		} catch (Exception e) {
-			ret = new JSONArray();
-			ret.add((JSONObject)getValues(urlString, properties));
-		}
-		return ret;		
+		Object ret = getValues(urlString, properties);
+		return AccessJson.returnJsonArray(ret);		
 	}
-	
+
 	public static Object getValues(String urlString, ReportProperties properties) throws MalformedURLException, IOException, ParseException {
 		URL url = new URL(urlString);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();

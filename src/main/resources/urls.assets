@@ -1,4 +1,6 @@
 baseUrl:=https://data.api.andfrankly.com/
 apiVersion:=v1
 getKpis:=/kpis
-getKpiGroup:=/kpis/{kpiId}/values?groupId={groupId}&includeSubgroups\=true
+getGroups:=/groups
+getKpiGroup:=/kpis/{kpiId}/values?groupId={groupId}&includeSubgroups=true
+getResponseRates:=/responserates/values?groupId={groupId}&includeSubgroups=true
