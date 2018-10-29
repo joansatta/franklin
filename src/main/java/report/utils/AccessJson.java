@@ -5,8 +5,12 @@ import org.json.simple.JSONObject;
 public class AccessJson {
 
 	public static String getStringValue(JSONObject json,String[] path) {
+		return (String)getValue(json,path);
+	}
+	
+	public static Object getValue(JSONObject json,String[] path) {
 		if(path.length==1) {
-			return (String) json.get(path[0]);
+			return json.get(path[0]);
 		} else {
 			int i=0;
 			JSONObject aux=null;
@@ -14,7 +18,7 @@ public class AccessJson {
 				aux = (JSONObject)json.get(path[i]);
 				i++;
 			}
-			return (String)aux.get(path[path.length-1]);
+			return aux.get(path[path.length-1]);
 		}
 	}
 
