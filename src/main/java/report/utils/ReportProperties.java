@@ -14,7 +14,7 @@ public class ReportProperties {
 	
 	public ReportProperties() throws IOException {
 		properties = readFile("src\\main\\resources\\params.properties");
-		urls = readFile("src\\main\\resources\\urls.properties");
+		urls = readFile("src\\main\\resources\\urls.assets");
 	}
 	
 	public String getProperty(String name) {
