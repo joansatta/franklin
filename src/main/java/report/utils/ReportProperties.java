@@ -41,8 +41,8 @@ public class ReportProperties {
 	
 		String st; 
 		while ((st = br.readLine()) != null) {
-			String[] pair = st.split("\\=");
-			properties.put(pair[0], pair[1]);
+			String[] pair = st.split("\\:=");
+			properties.put(pair[0].trim(), pair[1].trim());
 		}
 		
 		br.close();

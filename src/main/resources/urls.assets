@@ -1,3 +1,4 @@
-baseUrl=https://data.api.andfrankly.com/
-apiVersion=v1
-getKpis=/kpis
+baseUrl:=https://data.api.andfrankly.com/
+apiVersion:=v1
+getKpis:=/kpis
+getKpiGroup:=/kpis/{kpiId}/values?groupId={groupId}&includeSubgroups\=true

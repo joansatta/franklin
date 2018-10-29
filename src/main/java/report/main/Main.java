@@ -8,6 +8,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
 import report.controller.RestController;
+import report.utils.AccessJson;
 import report.utils.ReportProperties;
 
 public class Main {	
@@ -20,6 +21,9 @@ public class Main {
 				JSONObject jo = (JSONObject)parsedJson.get(i);
 				System.out.println(jo.get("id"));
 			}
+			JSONObject jsonObject = RestController.getKpiGroup(properties, "P-100", "3939");			
+			System.out.println(AccessJson.getStringValue(jsonObject,new String[] {"kpi","name"}));
+
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
