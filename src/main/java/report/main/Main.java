@@ -16,13 +16,17 @@ public class Main {
 	public static void main(String[] args) {
 		try {
 			ReportProperties properties = new ReportProperties();
-			JSONArray parsedJson = RestController.getKpis(properties);
+/*			JSONArray parsedJson = RestController.getKpis(properties);
 			for(int i=0;i<parsedJson.size();i++){
 				JSONObject jo = (JSONObject)parsedJson.get(i);
 				System.out.println(jo.get("id"));
+			} */
+			JSONArray parsedJson2 = RestController.getKpiGroup(properties, "P-100", "3939");
+			for(int i=0;i<parsedJson2.size();i++){
+				JSONObject jo = (JSONObject)parsedJson2.get(i);
+				System.out.println(AccessJson.getStringValue(jo,new String[] {"kpi","name"}));
 			}
-			JSONObject jsonObject = RestController.getKpiGroup(properties, "P-100", "3939");			
-			System.out.println(AccessJson.getStringValue(jsonObject,new String[] {"kpi","name"}));
+
 
 		} catch (MalformedURLException e) {
 			e.printStackTrace();

@@ -16,12 +16,16 @@ import report.utils.ReportProperties;
 
 public class RestService {
 
+	@SuppressWarnings("unchecked")
 	public static JSONArray getJsonArray(String urlString, ReportProperties properties) throws MalformedURLException, IOException, ParseException {
-		return (JSONArray)getValues(urlString, properties);
-	}
-	
-	public static JSONObject getJsonObject(String urlString, ReportProperties properties) throws MalformedURLException, IOException, ParseException {
-		return (JSONObject)getValues(urlString, properties);
+		JSONArray ret = null;
+		try {
+			ret = (JSONArray)getValues(urlString, properties);
+		} catch (Exception e) {
+			ret = new JSONArray();
+			ret.add((JSONObject)getValues(urlString, properties));
+		}
+		return ret;		
 	}
 	
 	public static Object getValues(String urlString, ReportProperties properties) throws MalformedURLException, IOException, ParseException {
