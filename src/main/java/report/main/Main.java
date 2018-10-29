@@ -7,13 +7,13 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
-import report.utils.RestClient;
+import report.controller.RestController;
 
 public class Main {
 
 	public static void main(String[] args) {
 		try {
-			JSONArray parsedJson = RestClient.getValues("https://data.api.andfrankly.com/v1/kpis");
+			JSONArray parsedJson = RestController.getKpis();
 			for(int i=0;i<parsedJson.size();i++){
 				JSONObject jo = (JSONObject)parsedJson.get(i);
 				System.out.println(jo.get("id"));
