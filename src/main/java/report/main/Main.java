@@ -8,12 +8,14 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
 import report.controller.RestController;
+import report.utils.ReportProperties;
 
-public class Main {
+public class Main {	
 
 	public static void main(String[] args) {
 		try {
-			JSONArray parsedJson = RestController.getKpis();
+			ReportProperties properties = new ReportProperties();
+			JSONArray parsedJson = RestController.getKpis(properties);
 			for(int i=0;i<parsedJson.size();i++){
 				JSONObject jo = (JSONObject)parsedJson.get(i);
 				System.out.println(jo.get("id"));

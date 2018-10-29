@@ -10,25 +10,24 @@ import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import report.utils.ReportProperties;
+
 
 public class RestService {
 
-	public static JSONArray getValues(String urlString) throws MalformedURLException, IOException, ParseException {
-		URL url = new URL(urlString);
+	public static JSONArray getValues(String urlString, ReportProperties properties, String values) throws MalformedURLException, IOException, ParseException {
+		URL url = new URL(urlString+values);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod("GET");
-		conn.setRequestProperty("content-type", "application/json; charset=utf-8");
-		conn.setRequestProperty("Authorization","eyJhbGciOiJIUzI1NiJ9.eyJjb21wYW55SWQiOjEsImlhdCI6MTUzNjIzNTIyM30.eX0t7TJ9mzhH1zDlzXxdDtWhFccA_t-55Q_h4SX7Bc8");
-
+		conn.setRequestProperty(properties.getProperty("contentName"), properties.getProperty("contentValue"));
+		conn.setRequestProperty(properties.getProperty("tokenName"),properties.getProperty("tokenValue"));
 		if (conn.getResponseCode() != 200) {
 			throw new RuntimeException("Failed : HTTP error code : "+ conn.getResponseCode());
 		}
-
-		InputStreamReader isr = new InputStreamReader(conn.getInputStream(),"UTF-8");
-
-		JSONArray jsonArray = parseJson(isr);
-		
-		conn.disconnect();
+		InputStreamReader isr = new InputStreamReader(conn.getInputStream(),properties.getProperty("outputEncoding"));
+		JSONArray jsonArray = parseJson(isr);		
+		isr.close();
+		conn.disconnect();		
 		return jsonArray;
 	}
 
