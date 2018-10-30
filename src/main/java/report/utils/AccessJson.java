@@ -8,9 +8,14 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
 public class AccessJson {
-	
+
 	public static JSONArray getListValue(JSONObject json,String[] path) throws MalformedURLException, IOException, ParseException {
 		Object ret = getValue(json,path);
+		return returnJsonArray(ret);
+	}
+	
+	public static JSONArray getListValue(JSONObject json,String path) throws MalformedURLException, IOException, ParseException {
+		Object ret = getValue(json,new String[]{path});
 		return returnJsonArray(ret);
 	}
 
@@ -63,20 +68,33 @@ public class AccessJson {
 		}
 		return null;
 	}
-	
+
+	public static JSONObject getInnerObjectFromValue(JSONArray json, String inputField, Object inputValue) {
+		for(int i=0;i<json.size();i++){
+			JSONObject jo = (JSONObject)json.get(i);
+			Object key = getValue(jo, new String[]{inputField});
+			if(key !=null && (key==inputValue || key.equals(inputValue))) {
+				JSONObject innerObject; 
+				innerObject = jo;
+				return innerObject;
+			}
+		}
+		return null;
+	}
+
 	public static Object getValueFromValue(JSONArray json, String[] inputPath, Object inputValue,String outputField) {
 		JSONObject jo = getInnerObjectFromValue(json, inputPath, inputValue);
 		return jo!=null?jo.get(outputField):null;
 	}
-	
+
 	public static String getStringFromValue(JSONArray json, String[] inputPath, Object inputValue,String outputField) {
 		return getValueFromValue(json, inputPath, inputValue, outputField).toString();		
 	}
-	
+
 	public static Long getLongFromValue(JSONArray json, String[] inputPath, Object inputValue,String outputField) {
 		return (Long)getValueFromValue(json, inputPath, inputValue, outputField);		
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static JSONArray returnJsonArray(Object object) throws MalformedURLException, IOException, ParseException {
 		JSONArray ret = null;
