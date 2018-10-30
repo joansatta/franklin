@@ -18,43 +18,28 @@ public class Main {
 
 	public static void main(String[] args) {
 		try {
-			
+
 			ReportProperties properties = new ReportProperties();
 			JSONArray groups = RestController.getGroups(properties);
 			JSONArray kpis = RestController.getKpis(properties);
-			
-			Long groupIdL = AccessJson.getLongFromValue(groups, new String[]{"name"}, properties.getInput("groupName"), "id");
+			JSONObject selectedGroup = AccessJson.getInnerObjectFromValue(groups, new String[]{"name"}, properties.getInput("groupName"));
+			JSONObject selectedKpi = AccessJson.getInnerObjectFromValue(kpis, new String[]{"name"}, properties.getInput("kpiName"));
+
+			Long groupIdL = Long.parseLong(selectedGroup.get("id").toString());
 			String groupId = groupIdL.toString();
-			String kpiId = AccessJson.getStringFromValue(kpis, new String[]{"name"}, properties.getInput("kpiName"), "id");
-						
+			String kpiId = selectedKpi.get("id").toString();
+
 			JSONArray kpiGroups = RestController.getKpiGroup(properties, kpiId, groupId);
 			JSONArray responseRates = RestController.getResponseRates(properties, groupId);
 
-			List<ReportData> reporteFinal = new ArrayList<ReportData>();
-			
-			for(int i=0;i<kpiGroups.size();i++){
-				JSONObject kpiGroup = (JSONObject)kpiGroups.get(i);
-				JSONArray kpiValues = AccessJson.getListValue(kpiGroup, new String[]{"values"});
-				for(int j=0;j<kpiValues.size();j++) {
-					ReportData register = new ReportData();
-					JSONObject kpiValue = (JSONObject)kpiValues.get(j);
-					Long registerGroupId = Long.parseLong(kpiValue.get("groupId").toString());
-					register.setGroupName(AccessJson.getStringFromValue(groups, new String[] {"id"}, registerGroupId, "name"));
-					register.setGroupDescription(AccessJson.getStringFromValue(groups, new String[] {"id"}, registerGroupId, "description"));
-					register.setYear(kpiValue.get("yearWeek")!=null?kpiValue.get("date").toString():"");
-					register.setWeek(kpiValue.get("yearWeek")!=null?kpiValue.get("yearWeek").toString():"");
-					register.setKpiValue(kpiValue.get("value")!=null?kpiValue.get("value").toString():"");
-					reporteFinal.add(register);
-				}
-			}
-			
-			
-			String separador = "				";
-			
+			List<ReportData> reporteFinal = generateReport(selectedGroup,groups,kpiGroups,responseRates);
+
+			String separador = "		";
+
 			for(ReportData registro : reporteFinal) {
-				System.out.println(registro.getGroupName()+separador+registro.getGroupDescription()+separador+registro.getYear()+separador+registro.getWeek()+separador+registro.getKpiValue());
+				System.out.println(registro.getGroupName()+separador+registro.getGroupDescription()+separador+registro.getYear()+separador+registro.getWeek()+separador+registro.getKpiFormattedValue()+separador+registro.getResponseRateFormattedValue());
 			}
-			
+
 
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
@@ -62,6 +47,54 @@ public class Main {
 			e.printStackTrace();
 		} catch (ParseException e) {
 			e.printStackTrace();
+		}
+	}
+
+	private static List<ReportData> generateReport(JSONObject selectedGroup, JSONArray groups, JSONArray kpiGroups, JSONArray responseRates) throws MalformedURLException, IOException, ParseException {
+		List<ReportData> reporteFinal = new ArrayList<ReportData>();
+		if(selectedGroup != null){
+			//Load group register
+			createAndAddRegister(selectedGroup, kpiGroups, responseRates, reporteFinal);
+			JSONArray values = AccessJson.getListValue(selectedGroup, new String[]{"subgroups"});
+			if(values!=null){
+				for(int i=0;i<values.size();i++){
+					//Load subgroups registers
+					Long subgroupId = Long.parseLong(values.get(i).toString());
+					JSONObject subgroup = AccessJson.getInnerObjectFromValue(groups, new String[]{"id"}, subgroupId);
+					createAndAddRegister(subgroup, kpiGroups, responseRates, reporteFinal);
+				}
+			}
+		}
+		return reporteFinal;
+	}
+
+	private static void createAndAddRegister(JSONObject groupOrSubgroup, JSONArray kpiGroups, JSONArray responseRates, List<ReportData> reporteFinal) throws MalformedURLException, IOException, ParseException {
+		ReportData register = new ReportData();
+		register.setGroupName(groupOrSubgroup.get("name")!=null?groupOrSubgroup.get("name").toString():"");
+		register.setGroupDescription(groupOrSubgroup.get("description")!=null?groupOrSubgroup.get("description").toString():"");
+		register.setGroupId(groupOrSubgroup.get("id")!=null?groupOrSubgroup.get("id").toString():"");
+		addKpiInfo(kpiGroups,register);
+		addResponseRatesInfo(responseRates,register);
+		reporteFinal.add(register);
+	}
+	
+	private static void addKpiInfo(JSONArray kpiGroups, ReportData register) throws MalformedURLException, IOException, ParseException {
+		JSONObject kpiGroup = (JSONObject)kpiGroups.get(0);
+		JSONArray kpiValues = AccessJson.getListValue(kpiGroup, new String[]{"values"});
+		JSONObject kpiValue = AccessJson.getInnerObjectFromValue(kpiValues, new String[]{"groupId"}, register.getGroupId());
+		if(kpiValue!=null){
+			register.setYearWeek(kpiValue.get("yearWeek")!=null?kpiValue.get("yearWeek").toString():"");
+			register.setFullDate(kpiValue.get("date")!=null?kpiValue.get("date").toString():"");
+			register.setKpiValue(kpiValue.get("value")!=null?kpiValue.get("value").toString():"");
+		}
+	}
+
+	private static void addResponseRatesInfo(JSONArray responseRates, ReportData register) throws MalformedURLException, IOException, ParseException {
+		JSONObject responseRate = (JSONObject)responseRates.get(0);
+		JSONArray responseRateValues = AccessJson.getListValue(responseRate, new String[]{"values"});
+		JSONObject responseRateValue = AccessJson.getInnerObjectFromValue(responseRateValues, new String[]{"groupId"}, register.getGroupId());
+		if(responseRateValue!=null){
+			register.setResponseRate(responseRateValue.get("value")!=null?responseRateValue.get("value").toString():"");
 		}
 	}
 

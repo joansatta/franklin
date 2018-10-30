@@ -42,7 +42,7 @@ public class AccessJson {
 	 * inputValue is the value we are looking for on the inputPath
 	 * outputField is the name of the output field whose value we want to retrieve
 	 **/
-	public static Object getValueFromValue(JSONArray json, String[] inputPath, Object inputValue,String outputField) {
+	public static JSONObject getInnerObjectFromValue(JSONArray json, String[] inputPath, Object inputValue) {
 		for(int i=0;i<json.size();i++){
 			JSONObject jo = (JSONObject)json.get(i);
 			Object key = getValue(jo, inputPath);
@@ -58,10 +58,15 @@ public class AccessJson {
 					}
 					innerObject = getInnerObject(jo, auxPath);
 				}
-				return innerObject.get(outputField);
+				return innerObject;
 			}
 		}
 		return null;
+	}
+	
+	public static Object getValueFromValue(JSONArray json, String[] inputPath, Object inputValue,String outputField) {
+		JSONObject jo = getInnerObjectFromValue(json, inputPath, inputValue);
+		return jo!=null?jo.get(outputField):null;
 	}
 	
 	public static String getStringFromValue(JSONArray json, String[] inputPath, Object inputValue,String outputField) {
