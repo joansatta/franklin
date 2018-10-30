@@ -1,13 +1,20 @@
 package report.utils;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 public class AccessJson {
+	
+	public static Object parseJson(InputStreamReader isr) throws IOException, ParseException {
+		JSONParser jsonParser = new JSONParser();
+		return jsonParser.parse(isr);
+	}
 
 	public static JSONArray getListValue(JSONObject json,String[] path) throws MalformedURLException, IOException, ParseException {
 		Object ret = getValue(json,path);

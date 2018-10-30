@@ -11,14 +11,14 @@ import org.junit.Test;
 
 import report.controller.RestController;
 import report.utils.AccessJson;
-import report.utils.ReportProperties;
+import report.utils.ProjectProperties;
 
 public class GeneralProjectTest {
 
 	@Test
 	public void readPropertiesTest() {
 		try {
-			ReportProperties properties = new ReportProperties();
+			ProjectProperties properties = new ProjectProperties();
 			assertEquals(properties.getProperty("tokenName"),"Authorization");
 			assertEquals(properties.getUrl("getKpis"),"https://data.api.andfrankly.com/v1/kpis");
 		} catch (IOException e) {
@@ -29,7 +29,7 @@ public class GeneralProjectTest {
 	@Test
 	public void getKpiIdTest() {
 		try {
-			ReportProperties properties = new ReportProperties();
+			ProjectProperties properties = new ProjectProperties();
 			JSONArray kpis = RestController.getKpis(properties);
 			String id = AccessJson.getStringFromValue(kpis, new String[]{"name"}, properties.getInput("kpiName"), "id");
 			assertEquals(id,"P-102");
@@ -43,7 +43,7 @@ public class GeneralProjectTest {
 	@Test
 	public void getGroupIdTest() {
 		try {
-			ReportProperties properties = new ReportProperties();
+			ProjectProperties properties = new ProjectProperties();
 			JSONArray groups = RestController.getGroups(properties);
 			Long id = AccessJson.getLongFromValue(groups, new String[]{"name"}, properties.getInput("groupName"), "id");
 			assertTrue(id==3939);
