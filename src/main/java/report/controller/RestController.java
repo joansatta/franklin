@@ -1,6 +1,9 @@
 package report.controller;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -83,5 +86,25 @@ public class RestController {
 			register.setResponseRate(responseRateValue.get("value")!=null?responseRateValue.get("value").toString():"");
 		}
 	}
+	
+	public static void exportReport(ProjectProperties properties, List<ReportData> reporteFinal)
+			throws FileNotFoundException {
+		PrintWriter pw = new PrintWriter(new File(properties.getProperty("outputFilePath")));
+		String separator = properties.getProperty("outputFileSeparator");
+		String header = properties.getProperty("outputFileHeader").replace("{separator}", separator)+"\n";
+		pw.write(header);
+		for(ReportData registro : reporteFinal) {
+			String fileRegister = 	
+						(	registro.getGroupName()+separator+
+							registro.getGroupDescription()+separator+
+							registro.getYear()+separator+
+							registro.getWeek()+separator+
+							registro.getKpiFormattedValue()+separator+
+							registro.getResponseRateFormattedValue()+"\n");
+			pw.write(fileRegister);
+		}
+		pw.close();
+	}
+	
 
 }

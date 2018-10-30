@@ -19,7 +19,7 @@ public class Main {
 		try {
 			//Set properties
 			ProjectProperties properties = new ProjectProperties();
-			
+
 			//Retrieve data and generate report
 			JSONArray groups = RestController.getGroups(properties);
 			JSONArray kpis = RestController.getKpis(properties);
@@ -30,10 +30,8 @@ public class Main {
 			List<ReportData> reporteFinal = RestController.generateReport(selectedGroup,groups,kpiGroups,responseRates);
 
 			//Export generated report
-			String separador = "		";
-			for(ReportData registro : reporteFinal) {
-				System.out.println(registro.getGroupName()+separador+registro.getGroupDescription()+separador+registro.getYear()+separador+registro.getWeek()+separador+registro.getKpiFormattedValue()+separador+registro.getResponseRateFormattedValue());
-			}
+			RestController.exportReport(properties, reporteFinal);
+			//RestController.writeDataLineByLine(properties.getProperty("outputFilePath"));
 
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
@@ -45,6 +43,7 @@ public class Main {
 			e.printStackTrace();
 		}
 	}
+
 
 
 }

@@ -11,32 +11,32 @@ public class ReportData {
 	private String responseRate;
 
 	public String getGroupName() {
-		return groupName;
+		return groupName!=null?groupName:"";
 	}
 	public void setGroupName(String groupName) {
 		this.groupName = groupName;
 	}
 	public String getGroupDescription() {
-		return groupDescription;
+		return groupDescription!=null?groupDescription:"";
 	}
 	public void setGroupDescription(String groupDescription) {
 		this.groupDescription = groupDescription;
 	}
 	public String getYearWeek() {
-		return yearWeek;
+		return yearWeek!=null?yearWeek:"";
 	}
 	public void setYearWeek(String yearWeek) {
 		this.yearWeek = yearWeek;
 	}
 	public String getFullDate() {
-		return fullDate;
+		return fullDate!=null?fullDate:"";
 	}
 	public void setFullDate(String fullDate) {
 		this.fullDate = fullDate;
 	}
 	
 	public String getKpiValue(){
-		return kpiValue;
+		return kpiValue!=null?kpiValue:"";
 	}
 
 	public String getKpiFormattedValue() {
@@ -61,13 +61,13 @@ public class ReportData {
 		this.kpiValue = kpiValue;
 	}
 	public String getResponseRate() {
-		return responseRate;
+		return responseRate!=null?responseRate:"";
 	}
 	public void setResponseRate(String responseRate) {
 		this.responseRate = responseRate;
 	}
 	public String getGroupId() {
-		return groupId;
+		return groupId!=null?groupId:"";
 	}
 	public void setGroupId(String groupId) {
 		this.groupId = groupId;
